@@ -1,0 +1,43 @@
+{
+  "database": {
+    "path": "/absolute/or/relative/path/to/database"
+  },
+  "search": {
+    "name_keyword": null,
+    "refcode": null,
+    "n_atoms": {
+      "max": 200
+    },
+    "elements": {
+      "required": ["C", "H", "N"],
+      "additional": ["Ni", "Cu", "Zn", "Fe"]
+    },
+    "year": {
+      "min": 1900,
+      "max": 2024
+    },
+    "spacegroup": null,
+    "temperature": null,
+    "r_factor": null
+  },
+  "export": {
+    "output_dir": "./output/config_filtered",
+    "limit": 1000,
+    "formats": {
+      "cif": {
+        "output_subdir": "cif_files",
+        "include_symmetry": true
+      },
+      "json": {
+        "output_subdir": "json_files",
+        "include_structure": true,
+        "indent": 2
+      }
+    }
+  },
+  "logging": {
+    "verbose": true,
+    "save_stats": true,
+    "stats_file": "stats.json"
+  }
+}

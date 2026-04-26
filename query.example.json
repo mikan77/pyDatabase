@@ -1,0 +1,43 @@
+{
+  "database": {
+    "path": "/absolute/or/relative/path/to/database"
+  },
+  "query": {
+    "mode": "mol2_contact",
+    "search_backend": "c_anchor_v3",
+    "fragment_mol2": "/absolute/or/relative/path/to/query_fragment.mol2",
+    "radius_max": 5.0,
+    "contact_elements": ["O", "S", "N", "B"],
+    "contact_scope": "intermolecular",
+    "structure_ids": [],
+    "refcodes": [],
+    "max_structures": null,
+    "strict_bonds": false,
+    "strict_atom_types": true,
+    "allow_hydrogen_wildcards": false,
+    "progress_every": 10
+  },
+  "graph_cache": {
+    "path": "indexes/graph_cache_updated2_fast_full_v2"
+  },
+  "compact_cache": {
+    "path": "graph_cache_v3",
+    "rebuild": false,
+    "batch_structures": 256,
+    "workers": 1,
+    "progress_every": 1000,
+    "parquet_batch_rows": 200000
+  },
+  "output": {
+    "output_dir": "output/query",
+    "basename": "mol2_contact_results",
+    "formats": ["json", "csv"],
+    "export_structures": false,
+    "clean_output": true,
+    "html_report": true
+  },
+  "validation": null,
+  "logging": {
+    "verbose": true
+  }
+}

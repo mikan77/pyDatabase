@@ -1,0 +1,8 @@
+__pycache__/
+build/
+dist/
+output/
+graph_cache_v3/
+src/uspexdb/query_search/_c_anchor.*.so
+*.pyc
+.DS_Store
