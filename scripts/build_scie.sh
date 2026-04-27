@@ -5,15 +5,20 @@ ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 
 PYTHON_BIN=${PYTHON_BIN:-python3}
+ARTIFACTS_DIR=${ARTIFACTS_DIR:-"$ROOT/artifacts"}
 DIST_DIR=${DIST_DIR:-"$ROOT/dist"}
-WHEELHOUSE_DIR=${WHEELHOUSE_DIR:-"$ROOT/wheelhouse"}
+WHEELHOUSE_DIR=${WHEELHOUSE_DIR:-"$ARTIFACTS_DIR/wheelhouse"}
 OUTPUT_PATH=${OUTPUT_PATH:-"$DIST_DIR/uspexdb-scie"}
+PEX_PIP_VERSION=${PEX_PIP_VERSION:-23.2}
+PEX_SETUPTOOLS_VERSION=${PEX_SETUPTOOLS_VERSION:-68.0.0}
+PEX_WHEEL_VERSION=${PEX_WHEEL_VERSION:-0.40.0}
 
 echo "==> Project root: $ROOT"
 echo "==> Python: $PYTHON_BIN"
 echo "==> Output: $OUTPUT_PATH"
+echo "==> Artifacts: $ARTIFACTS_DIR"
 
-mkdir -p "$DIST_DIR" "$WHEELHOUSE_DIR"
+mkdir -p "$DIST_DIR" "$ARTIFACTS_DIR" "$WHEELHOUSE_DIR"
 
 MISSING_TOOLS=$(
   "$PYTHON_BIN" - <<'PY'
@@ -35,7 +40,7 @@ if [ -n "$MISSING_TOOLS" ]; then
 fi
 
 echo "==> Building project wheel"
-"$PYTHON_BIN" -m build --wheel --no-isolation
+"$PYTHON_BIN" -m build --wheel --no-isolation --outdir "$DIST_DIR"
 
 WHEEL_PATH=$(ls -t "$DIST_DIR"/uspexdb-*.whl 2>/dev/null | head -n 1 || true)
 if [ -z "$WHEEL_PATH" ] || [ ! -f "$WHEEL_PATH" ]; then
@@ -43,8 +48,7 @@ if [ -z "$WHEEL_PATH" ] || [ ! -f "$WHEEL_PATH" ]; then
   exit 1
 fi
 
-echo "==> Refreshing local wheelhouse from $WHEEL_PATH"
-"$PYTHON_BIN" -m pip download --dest "$WHEELHOUSE_DIR" "$WHEEL_PATH"
+"$ROOT/scripts/prepare_wheelhouse.sh" "$WHEEL_PATH"
 
 CERT_FILE=$(
   "$PYTHON_BIN" - <<'PY'
@@ -59,6 +63,7 @@ SSL_CERT_FILE="$CERT_FILE" \
   "$WHEEL_PATH" \
   -f "$WHEELHOUSE_DIR" \
   --no-pypi \
+  --pip-version "$PEX_PIP_VERSION" \
   -c uspexdb \
   --scie eager \
   --scie-only \

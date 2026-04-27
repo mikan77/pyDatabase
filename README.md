@@ -32,6 +32,7 @@ pyDatabase/
       uspexdb_v2.py           # vendored legacy implementation
   scripts/
     build_extension.sh        # install package dependencies + build C extension
+    prepare_wheelhouse.sh     # prepare offline wheelhouse for PEX/scie builds
     build_scie.sh             # build standalone PEX scie executable
   example/
     config/
@@ -61,6 +62,8 @@ The main runtime dependencies are:
 - `ase`
 - `matplotlib`
 - `pymatgen`
+
+Source installation currently targets Python `>=3.9` as declared in `pyproject.toml`.
 
 ## Command Line Usage
 
@@ -124,6 +127,11 @@ For users who should not install Python packages manually, the project can be pa
 ./scripts/build_scie.sh
 ```
 
+`build_scie.sh` now does two distinct steps:
+
+1. build the project wheel into `dist/`
+2. prepare an offline-style wheelhouse in `artifacts/wheelhouse/` and use it for the final `PEX scie` build
+
 This creates:
 
 - `dist/uspexdb-scie` — standalone `PEX scie` executable
@@ -132,7 +140,21 @@ There may also be intermediate build artifacts such as:
 
 - `dist/uspexdb` — regular PEX file
 - `dist/*.whl` — wheel built for packaging
-- `wheelhouse/` — local wheel cache used during scie assembly
+- `artifacts/wheelhouse/` — local wheel cache used during scie assembly
+
+`artifacts/wheelhouse/` is a build artifact directory and should not be committed to Git.
+
+### Exact build notes
+
+- Source installs: Python `>=3.9`
+- `scie` build workflow: currently documented and exercised with Python `3.12`
+- Current packaged binary targets are platform-specific, for example:
+  - `macOS arm64` when built on Apple Silicon macOS
+  - `Linux x86_64` when built on a Linux x86_64 machine
+- The wheelhouse bootstrap currently pins the PEX bootstrap stack to:
+  - `pip==23.2`
+  - `setuptools==68.0.0`
+  - `wheel==0.40.0`
 
 Important:
 

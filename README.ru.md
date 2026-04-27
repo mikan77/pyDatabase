@@ -32,6 +32,7 @@ pyDatabase/
       uspexdb_v2.py           # vendored legacy implementation
   scripts/
     build_extension.sh        # установка зависимостей + сборка C-extension
+    prepare_wheelhouse.sh     # подготовка offline wheelhouse для PEX/scie
     build_scie.sh             # сборка standalone PEX scie executable
   example/
     config/
@@ -61,6 +62,8 @@ python3 -m venv .venv
 - `ase`
 - `matplotlib`
 - `pymatgen`
+
+Исходная установка проекта сейчас рассчитана на Python `>=3.9`, как указано в `pyproject.toml`.
 
 ## Запуск из CLI
 
@@ -124,6 +127,11 @@ python3 -m venv .venv
 ./scripts/build_scie.sh
 ```
 
+Теперь `build_scie.sh` делает два отдельных шага:
+
+1. собирает wheel проекта в `dist/`
+2. готовит offline-style wheelhouse в `artifacts/wheelhouse/` и использует его для финальной сборки `PEX scie`
+
 На выходе получается:
 
 - `dist/uspexdb-scie` — standalone `PEX scie` executable
@@ -132,7 +140,21 @@ python3 -m venv .venv
 
 - `dist/uspexdb` — обычный PEX
 - `dist/*.whl` — wheel для packaging
-- `wheelhouse/` — локальный wheel cache для сборки scie
+- `artifacts/wheelhouse/` — локальный wheel cache для сборки scie
+
+`artifacts/wheelhouse/` — это build artifact directory, его не нужно коммитить в Git.
+
+### Точные замечания по сборке
+
+- Установка из исходников: Python `>=3.9`
+- Workflow сборки `scie`: сейчас документирован и прогонялся с Python `3.12`
+- Итоговые бинарники platform-specific, например:
+  - `macOS arm64`, если сборка выполняется на Apple Silicon macOS
+  - `Linux x86_64`, если сборка выполняется на Linux x86_64
+- Для bootstrap wheelhouse сейчас жёстко зафиксированы версии:
+  - `pip==23.2`
+  - `setuptools==68.0.0`
+  - `wheel==0.40.0`
 
 Важно:
 

@@ -1,6 +1,7 @@
 __pycache__/
 build/
 dist/
+artifacts/
 output/
 graph_cache_v3/
 src/uspexdb/query_search/_c_anchor.*.so
