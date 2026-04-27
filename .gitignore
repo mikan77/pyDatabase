@@ -4,5 +4,7 @@ dist/
 output/
 graph_cache_v3/
 src/uspexdb/query_search/_c_anchor.*.so
+wheelhouse/uspexdb.egg-info
+src/
 *.pyc
 .DS_Store
